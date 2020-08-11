@@ -103,6 +103,7 @@ public class UserDao{
     }
 }
 ```
+
 위 코드의 문제
 * makeConnection()을 타사에서 만든 createConnection() 이라는 메소드 이름으로 변경하려면 add, get 코드 모두 변경해야함.
 * DB커넥션을 제공하는 클래스가 어떤 것인지 UserDao가 구체적으로 알고 있어야 합니다. UserDao에 SimpleConnectionMaker라는 클래스 타입의 인스턴스 변수까지 정의해놓고 있어 타사에서 다른 클래스를 구현하면 UserDao 자체를 다시 수정해야함.
@@ -378,8 +379,9 @@ springproject1.dao.UserDao@ee22f7
 * 생성된 싱글톤 오브젝트를 저장할 수 있는 자신과 같은 타입의 스태틱 필드를 정의한다.
 * 스태틱 팩토리 메소드인 getInstance()를 만들고 이 메소드가 최초로 호출되는 시점에서만 오브젝트가 생성된다. 생성된 오브젝트는 스태틱 필드에 저장하거나 초기값으로 오브젝트를 미리 만든다.
 * 한번 오브젝트(싱글톤)가 만들어지고 난 이후에는 getInstance() 메소드를 통해 이미 만들어져 스태틱 필드에 저장된 오브젝트를 넘겨준다.
-<br>
-위의 사항을 반영한 코드는 아래와 같다.
+
+위의 사항을 반영한 코드는 아래와 같다. <br>
+
 ```java
 public class UserDao{
 	private static UserDao INSTANCE;
