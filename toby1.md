@@ -103,7 +103,6 @@ public class UserDao{
     }
 }
 ```
-
 위 코드의 문제
 * makeConnection()을 타사에서 만든 createConnection() 이라는 메소드 이름으로 변경하려면 add, get 코드 모두 변경해야함.
 * DB커넥션을 제공하는 클래스가 어떤 것인지 UserDao가 구체적으로 알고 있어야 합니다. UserDao에 SimpleConnectionMaker라는 클래스 타입의 인스턴스 변수까지 정의해놓고 있어 타사에서 다른 클래스를 구현하면 UserDao 자체를 다시 수정해야함.
@@ -379,9 +378,8 @@ springproject1.dao.UserDao@ee22f7
 * 생성된 싱글톤 오브젝트를 저장할 수 있는 자신과 같은 타입의 스태틱 필드를 정의한다.
 * 스태틱 팩토리 메소드인 getInstance()를 만들고 이 메소드가 최초로 호출되는 시점에서만 오브젝트가 생성된다. 생성된 오브젝트는 스태틱 필드에 저장하거나 초기값으로 오브젝트를 미리 만든다.
 * 한번 오브젝트(싱글톤)가 만들어지고 난 이후에는 getInstance() 메소드를 통해 이미 만들어져 스태틱 필드에 저장된 오브젝트를 넘겨준다.
-
-위의 사항을 반영한 코드는 아래와 같다. <br>
-
+<br>
+위의 사항을 반영한 코드는 아래와 같다.
 ```java
 public class UserDao{
 	private static UserDao INSTANCE;
@@ -434,9 +432,64 @@ public class UserDao{
 <br>
 
 ### 스프링 빈의 스코프
-스프링이 관리하는 오브젝트, 즉 빈이 생성되고 존재하고 적용되는 범위를 빈의 스코프라 한다. 스프링 빈의 기본 스코프는 싱글톤으로 컨테이너 내에 한 개의 오브젝트만 만들어져 강제로 제거하지 않는 한 컨테이너가 존재하는 동안 계속 유지된다. <br> (그 외. prototype, request, session 등이 있고 이는 10장에서 다를 것이다.)
+스프링이 관리하는 오브젝트, 즉 빈이 생성되고 존재하고 적용되는 범위를 빈의 스코프라 한다. 스프링 빈의 기본 스코프는 싱글톤으로 컨테이너 내에 한 개의 오브젝트만 만들어져 강제로 제거하지 않는 한 컨테이너가 존재하는 동안 계속 유지된다. <br> (그 외에는 prototype, request, session 등이 있고 이는 10장에서 다를 것이다.)
 
 <br>
 
 ## 1.7 의존관계 주입(DI)
 ### 제어의 역전(IoC)과 의존관계 주입
+스프링은 IoC 컨테이너라는 것 만으로는 설명이 부족하다. IoC는 위의 설명에서도 자주 언급되었듯이 느슨하고 폭넓게 이용되기 때문이다. 그래서 의존관계 주입(DI, Dependency Injection)이라는 용어가 나왔다.
+### 런타임 의존관계 설정
+#### 의존관계
+지금까지 작업해왔던 UserDao의 경우 ConnectionMaker에 의존하고있는 형태이다. ConnectionMaker 인터페이스가 변한다면 UserDao가 영향을 받게 된다. 하지만 ConnectionMaker 인터페이스를 구현한 클래스인 KConnectionMaker등이 바뀌더라도 UserDao에 영향을 주지 않는다. 이렇게 인터페이스에 대해서만 의존관계를 만들면 인터페이스 구현 클래스의 영향을 덜 받는 상태가 되며 결합도가 낮다고 설명할 수 있다.<br>
+위 처럼 설계 모델이나 코드에서 드러나는 의존관계 외에 런타임 의존관계가 있다. 프로그램이 시작되고 UserDao 오브젝트가 만들어지고 런타임 시에 의존관계를 맺는 대상을 의존 오브젝트라고 말한다.<br><br>
+의존관계 주입이란 다음 세 가지 조건을 충족하는 작업이다.
+* 클래스 모델이나 코드에는 런타임 시점의 의존관계가 드러나지 않는다. 그러기 위해서는 인터페이스에만 의존하고 있어야 한다.
+* 런타임 시점의 의존관계는 컨테이너나 팩토리 같은 제 3의 존재가 결정한다.
+* 의존관계는 오브젝트에 대한 레퍼런스를 외부에서 제공(주입)해줌으로써 만들어진다.
+
+#### UserDao의 의존관계 주입
+```java
+public UserDao(){
+	connectionMaker = new DConnectionMaker();
+}
+```
+우리가 작업한 UserDao는 위 코드처럼 DConnectionMaker를 사용하겠다를 UserDao에서 결정하고 관리하고있다. 런타임 의존관계가 코드속에 미리 결정되어있다는 것이다. 따라서 IoC 방식으로 제3의존재에 런타임 의존관계 결정 권한을 위임하도록 수정하겠다.
+```java
+public class UserDao(){
+	private ConnectionMaker connectionMaker;
+	
+	public UserDao(ConnectionMaker connectionMaker){
+		this.connectionMaker = connectionMaker;
+	}
+}
+```
+위 처럼 DI는 자신이 사용할 오브젝트에 대한 제어를 외부로 넘김으로써 IoC개념에도 잘 들어맞는다.
+
+<br>
+
+### 의존관계 검색과 주입
+스프링이 제공하는 IoC에는 의존관계 주입만 있는 것이 아니다. 의존관계를 외부로부터의 주입이 아니라 스스로 검색을 이용하기 때문에 의존관계 검색(dependency lookup)이라고 불리는 것도 있다. 의존관계 검색은 자신이 필요한 의존 오브젝트를 능동적으로 찾는다. 물론 자신이 어떤 클래스의 오브젝트를 이용할지 결정하지는 않는다.
+```java
+public UserDao(){
+	DaoFactory daoFactory = new DaoFactory();
+	this.connectionMaker = daoFactory.connectionMaker();
+}
+```
+이렇게 해도 자신이 어떤 ConnectionMaker 오브젝트를 사용할지 알지 못한다. 하지만 아래처럼 getBean()을 활용하여 의존관계 검색으로 사용할 수도 있다.
+```java
+public UserDao(){
+	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+	this.connectionMaker = context.getBean("connectionMaker",ConnectionMaker.class);
+}
+```
+의존관계 주입이 코드가 깔끔하기 때문에 주로 의존관계 주입 방식을 사용하지만 의존관계 검색 방식을 사용해야할 때가 있다.
+```java
+public class UserDaoTest{
+	public static void main(String[] args) throws Exception{
+		Application context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		UserDao dao = context.getBean("userDao", UserDao.class);
+	}
+}
+```
+위의 예를 들자면 스태틱 메소드인 main()에서는 DI를 이용해 오브젝트를 주입받을 방법이 없는 경우이다. 서버에서도 main()메소드와 비슷한 역할을 하는 서블릿에서 스프링 컨테이너에 담긴 오브젝트를 사용하려면 한 번은 의존관계 검색 방식을 사용해야한다. 다행히 이런 서블릿은 스프링이 미리 만들어서 제공하기 때문에 직접 구현할 필요는 없다.
