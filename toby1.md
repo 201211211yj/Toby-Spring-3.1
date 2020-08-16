@@ -378,8 +378,7 @@ springproject1.dao.UserDao@ee22f7
 * 생성된 싱글톤 오브젝트를 저장할 수 있는 자신과 같은 타입의 스태틱 필드를 정의한다.
 * 스태틱 팩토리 메소드인 getInstance()를 만들고 이 메소드가 최초로 호출되는 시점에서만 오브젝트가 생성된다. 생성된 오브젝트는 스태틱 필드에 저장하거나 초기값으로 오브젝트를 미리 만든다.
 * 한번 오브젝트(싱글톤)가 만들어지고 난 이후에는 getInstance() 메소드를 통해 이미 만들어져 스태틱 필드에 저장된 오브젝트를 넘겨준다.
-<br>
-위의 사항을 반영한 코드는 아래와 같다.
+
 ```java
 public class UserDao{
 	private static UserDao INSTANCE;
@@ -493,3 +492,43 @@ public class UserDaoTest{
 }
 ```
 위의 예를 들자면 스태틱 메소드인 main()에서는 DI를 이용해 오브젝트를 주입받을 방법이 없는 경우이다. 서버에서도 main()메소드와 비슷한 역할을 하는 서블릿에서 스프링 컨테이너에 담긴 오브젝트를 사용하려면 한 번은 의존관계 검색 방식을 사용해야한다. 다행히 이런 서블릿은 스프링이 미리 만들어서 제공하기 때문에 직접 구현할 필요는 없다.
+
+### 의존관계 주입의 응용
+#### 기능 구현의 교환
+로컬 DB로 사용하던 것을 개발이 완료되면 운영서버로 배치해서 사용할 것이다. 그런데 만약 DI 방식을 적용하지 않았다면 로컬 DB연결 기능이 있는 LocalDBConnectionMaker를 수정해야할 때 DAO가 100개라면 최소한 100군데 이상 코드를 수정해야 한다. <dr>
+반면에 DI 방식을 적용하였다면 @Configuration이 붙은 Factory를 수정하면 된다.
+```java
+@Bean
+public ConnectionMaker connectionMaker(){
+	return new LocalDBConnectionMaker();
+}
+```
+위와 같은 개발용 코드를 아래처럼 변경하면 된다.
+```java
+@Bean
+public ConnectionMaker connectionMaker(){
+	return new ProductionDBConnectionMaker();
+}
+
+#### 부가기능 추가
+모든 DAO의 makeConnection() 메소드를 호출하는 부분에 새로 count를 세는 코드를 추가한다고 해보자. DI를 이용한다면 기존 코드의 수정 없이 컨테이너가 사용하는 설정정보만 수정해서 런타임 의존관계만 새롭게 정의해주면 된다.
+```java
+public class CountingConnectionMaker implements ConnectionMaker{
+	int count = 0;
+	private ConnectionMaker realConnectionMaker;
+	
+	public CountingConnectionMaker(ConnectionMaker realConnectionMaker){
+		this.realConnectionMaker = realConnectionMaker;
+	}
+	
+	public Connection makeConnection() throws Exception{
+		this.count++;
+		return realConnectionMaker.makeConnection();
+	}
+	
+	public int getCounter(){
+		return this.counter;
+	}
+}
+```
+CountingConnectionMaker 클래스는 ConnectionMaker 인터페이스를 구현했지만 내부에서 직접 DB커넥션을 만들지 않는다. 대신 DAO가 DB커넥션을 가져올 때마다 호출하는 makeConnectio()에서 DB 연결횟수 카운터를 증가시킨다.
