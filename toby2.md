@@ -152,12 +152,15 @@ public static void main(String[] args){
 ```
 <br>
 이 코드를 실행하면 다음과 같은 메세지가 출력된다.
+
 ```
 JUnit version 4.7
 Time: 0.578
 OK (1 test)
 ```
+
 만약 코드에 이상이 있어 검증에 실패할 경우 다음과 같은 메세지가 출력된다.
+
 ```
 Time: 1.094
 There was 1 failure:
