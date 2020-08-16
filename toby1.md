@@ -509,6 +509,9 @@ public ConnectionMaker connectionMaker(){
 public ConnectionMaker connectionMaker(){
 	return new ProductionDBConnectionMaker();
 }
+```
+
+<br>
 
 #### 부가기능 추가
 모든 DAO의 makeConnection() 메소드를 호출하는 부분에 새로 count를 세는 코드를 추가한다고 해보자. DI를 이용한다면 기존 코드의 수정 없이 컨테이너가 사용하는 설정정보만 수정해서 런타임 의존관계만 새롭게 정의해주면 된다.
@@ -531,4 +534,142 @@ public class CountingConnectionMaker implements ConnectionMaker{
 	}
 }
 ```
-CountingConnectionMaker 클래스는 ConnectionMaker 인터페이스를 구현했지만 내부에서 직접 DB커넥션을 만들지 않는다. 대신 DAO가 DB커넥션을 가져올 때마다 호출하는 makeConnectio()에서 DB 연결횟수 카운터를 증가시킨다.
+CountingConnectionMaker 클래스는 ConnectionMaker 인터페이스를 구현했지만 내부에서 직접 DB커넥션을 만들지 않는다. 대신 DAO가 DB커넥션을 가져올 때마다 호출하는 makeConnectio()에서 DB 연결횟수 카운터를 증가시킨다. <br>
+의존관계는 다음 그림과 같다.
+![ex_screenshot](./toby1_screenshot/CountingConnectionMaker.jpg)
+
+이 그림을 아래 코드로 변경하면 다음과 같다.
+
+```java
+@Configuration
+public class CountingDaoFactory{
+	@Bean
+	public UserDao userDao(){
+		return new UserDao(connectionMaker());
+	}
+	
+	@Bean
+	public ConnectionMaker connectionMaker(){
+		return new CountingConnectionMaker(realConnectionMaker());
+	}
+	
+	@Bean
+	public ConnectionMaker realConnectionMaker();{
+		return new KConnectionMaker();
+	}
+}
+```
+그 다음 실행코드를 만들자면 다음과 같다.
+
+```java
+public class UserDaoConnectionCountingTest{
+	public static void main(String[] args) throws Exception{
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+		UserDao dao = context.getBean("userDao", UserDao.class);
+	
+	
+		//
+		//DAO 사용코드
+		//
+		
+		CountingConnectionMaker ccm = context.getBean("connectionMaker", CountingConnectionMaker.class);
+		System.out.println("Connection Count : " + ccm.getCount());
+	}
+}
+```
+지금은 DAO가 하나뿐이지만 DAO가 수백 개여도 상관이 없다. DI의 장점은 관심사의 분리(SoC)를 통해 얻어지는 높은 응집도에서 나온다. 
+
+<br>
+
+### 메소드를 이용한 의존관계 주입
+지금까지는 UserDao 의존관계 주입을 위해 생성자를 사용했다. 생서자에 파라미터를 만들어두고 이를 통해 DI 컨테이너가 의존할 오브젝트 레퍼런스를 넘겨주도록 만들었다. 하지만 생성자가 아닌 일반 메소드를 사용할 수도 있다.
+* **수정자 메소드를 이용한 주입** : 수정자(setter)메소드는 외부로부터 제공받은 오브젝트 레퍼런스를 저장해뒀다가 내부의 메소드에서 사용하게 하는 DI 방식에서 활용하기에 적절하다.
+```java
+public class UserDao{
+	private ConnectionMaker connectionMaker;
+	
+	public void setConnectionMaker(ConnectionMaker connectionMaker){
+		this.connectionMaker = connectionMaker;
+	}
+}
+```
+```java
+@Bean
+public UserDao userDao(){
+	UserDao userDao = new UserDao();
+	userDao.setConnectionMaker(connectionMaker());
+	return userDao;
+}
+```
+* **일반 메소드를 이용한 주입** : 수정자 메소드처럼 set으로 시작해야하고 한 번에 한 개의 파라미터만 가질 수 있다는 제약이 싫다면 일반 메소드를 통해 활용해도 된다.
+
+<br>
+
+## 1.8 XML을 이용한 설정
+DaoFactory는 대부분 틀에 박힌 구조가 반복된다. 또한 DI 구성이 바뀔 때마다 자바 코드를 수정하고 클래스를 다시 컴파일하는 것은 귀찮은 작업이다.
+<br>
+스프링은 DaoFactory와 같은 자바 클래스 외에도 XML을 이용하여 DI 의존관계 설정정보를 만들 수 있다.
+<br>
+### XML 설정
+위 코드들에서 @Configuration을 <beans>, @Bean을 <bean>에 대응하면 된다.
+![ex_screenshot](./toby1_screenshot/BeanBeansXML.jpg)
+<br>
+#### ConnectionMaker 전환
+```java
+@Bean // <bean
+public ConnectionMaker
+connectionMaker(){ // id="connectionMaker"
+	return new KConnectionMaker(); // class="spring...KConnectionMaker"/>
+}
+```
+```xml
+<bean id = "connectionMaker" class = "spring...KConnectionMaker"/>
+```
+<br>
+
+#### UserDao의 전환
+XML에서는 <property> 태그를 사용해 의존 오브젝트와의 관계를 정의한다. name과 ref라는 두 개의 애트리뷰트를 갖는다. name은 프로퍼티의 이름이며 ref는 수정자 메소드를 통해 주입해줄 오브젝트의 빈 이름이다.
+<br>
+
+```java
+userDao.setConnectionMaker(connectionMaker);
+```
+
+```xml
+<property name ="connectionMaker" ref="connectionMaker" />
+```
+
+정리 하자면 아래와 같다.
+
+```xml
+<bean id="userDao" class="spring...UserDao">
+	<property name="connectionMaker" ref="connectionMaker"/>
+</bean>
+```
+<br>
+
+#### XML의 의존관계 주입 정보
+두 개의 <bean> 태그를 이용해 메소드를 모두 XML로 변환했다. 결론적으로 아래와 같은 xml코드가 나온다.
+
+```xml
+<beans>
+	<bean id="connectionMaker" class="spring...KConnectionMaker"/>
+
+	<bean id="userDao" class="spring...UserDao">
+		<property name="connectionMaker" ref="connectionMaker"/>
+	</bean>
+</beans>
+```
+만약 connectionMaker 빈을 myConnectionMaker 라는 이름으로 변경했다면 userDao 빈의 connectionMaker 프로퍼티 ref값도 변경해줘야 한다.
+```xml
+<beans>
+	<bean id="myConnectionMaker" class="spring...KConnectionMaker"/>
+
+	<bean id="userDao" class="spring...UserDao">
+		<property name="connectionMaker" ref="myConnectionMaker"/>
+	</bean>
+</beans>
+```
+
+
+
