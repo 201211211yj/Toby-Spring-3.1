@@ -535,7 +535,7 @@ public class CountingConnectionMaker implements ConnectionMaker{
 }
 ```
 CountingConnectionMaker 클래스는 ConnectionMaker 인터페이스를 구현했지만 내부에서 직접 DB커넥션을 만들지 않는다. 대신 DAO가 DB커넥션을 가져올 때마다 호출하는 makeConnectio()에서 DB 연결횟수 카운터를 증가시킨다. <br>
-의존관계는 다음 그림과 같다.
+의존관계는 다음 그림과 같다. <br>
 ![ex_screenshot](./toby1_screenshot/CountingConnectionMaker.jpg)
 
 이 그림을 아래 코드로 변경하면 다음과 같다.
@@ -611,7 +611,7 @@ DaoFactory는 대부분 틀에 박힌 구조가 반복된다. 또한 DI 구성�
 스프링은 DaoFactory와 같은 자바 클래스 외에도 XML을 이용하여 DI 의존관계 설정정보를 만들 수 있다.
 <br>
 ### XML 설정
-위 코드들에서 @Configuration을 <beans>, @Bean을 <bean>에 대응하면 된다.
+위 코드들에서 @Configuration을 <beans>, @Bean을 <bean>에 대응하면 된다.<br>
 ![ex_screenshot](./toby1_screenshot/BeanBeansXML.jpg)
 <br>
 #### ConnectionMaker 전환
