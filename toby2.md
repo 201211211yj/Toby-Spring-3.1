@@ -42,7 +42,7 @@ public class UserDaoTest{
 <br>
 
 ### UserDaoTest의 문제점
-* **수동 확인 작업의 번거로움** : UserDaoTest는 모두 자동으로 진행하도록 만들어졌지만, 여전히 사람의 눈으로 확인하는 과정이 필요하다. add()에서 User 정보를 DB에 등록하고, 이를 다시 get()을 이용해 가져왔을 떄 입력한 값과 가져온 값이 일치하는지를 테스트코드는 확인해주지 않는다.
+* **수동 확인 작업의 번거로움** : UserDaoTest는 모두 자동으로 진행하도록 만들어졌지만, 여전히 사람의 눈으로 확인하는 과정이 필요하다. add()에서 User 정보를 DB에 등록하고, 이를 다시 get()을 이용해 가져왔을 때 입력한 값과 가져온 값이 일치하는지를 테스트코드는 확인해주지 않는다.
 * **실행 작업의 번거로움** : 아무리 간단히 실행 가능한 main()메소드라 해도 매번 그것을 실행하는 것은 제일 번거롭다. 전체 기능을 테스트해보기 위해 main()메소드를 수백 번 실행하는 수고가 필요할 수도 있다.
 
 <br>
@@ -112,7 +112,7 @@ if(!user.getName().equals(user2.getName())){...}
 ```java
 assertThat(user2.getName(), is(user.getName()));
 ```
-assertThat()메소드는 첫 번쨰 파라미터의 값을 뒤에 나오는 매처(matcher)라고 불리는 조건으로 비교해서 일치하면 다음으로 넘어가고, 아니면 테스트가 실패하도록 만들어준다.
+assertThat()메소드는 첫 번째 파라미터의 값을 뒤에 나오는 매처(matcher)라고 불리는 조건으로 비교해서 일치하면 다음으로 넘어가고, 아니면 테스트가 실패하도록 만들어준다.
 <br>
 
 ```java
@@ -187,3 +187,179 @@ Tests run : 1, Failures: 1
 소스 트리를 선택하고 Run As - JUnit Test를 실행하면 해당 패키지 아래에 있는 모든 JUnit 테스트를 한번에 실행해준다.
 
 #### 빌드 툴
+ANT나 메이븐(Maven) 등의 JUnit 플러그인 사용
+
+### 테스트 결과의 일관성
+지금까지 테스트를 진행할 떄는 매번 UserDaoTest를 수행하면 DB의 데이터를 지워줘야 했다.
+
+#### deleteAll()의 getCount() 추가
+■ deleteAll<br>
+```java
+public void deleteAll() throws Exception{
+	Connection c = dataSource.getConnection();
+	
+	PreparedStatement ps = c.prepareStatemente("delete from user");
+	
+	ps.executeUpdate();
+	ps.close();
+	c.close();
+}
+```
+■ getCount()<br>
+```java
+public int getCount() throws Exception{
+	Connection c = dataSource.getConnection();
+	
+	PreparedStatement ps = c.prepareStatemente("select count(*) from users");
+	
+	ResultSet rs = ps.executeQuery();
+	rs.next;
+	int count = rs.getInt(1);
+	
+	rs.close();
+	ps.close();
+	c.close();
+}
+```
+
+#### deleteAll()과 getCount() 테스트
+```java
+@Test
+public void addAndGet() throws Exception{
+	...
+	dao.deleteAll();
+	assertThat(dao.getCount(), is(0));
+	
+	User user = new User();
+	user.setId("hello");
+	
+	dao.add(user);
+	assertThat(dao.getCount(), is(1));
+	
+	...
+}
+```
+
+### 포괄적인 테스트
+앞에서 getCount() 메소드를 테스트에 적용하긴 했지만 두개 이상의 레코드를 add()했을 때는 잘 될수도 있겠지만 미처 생각하지 못한 문제가 숨어있을수도 있다.
+
+<br>
+
+#### getCount() 테스트
+
+```java
+public User(String id, String name, String password){
+	this.id = id;
+	this.name = name;
+	this.password = password;
+}
+
+public User(){// 자바빈의 규약을 따르는 클레스에 생성자를 명시적으로 추가했을 경우에는 파라미터 없는 생성자도 작성해줘야한다.
+
+}
+```
+
+```java
+@Test
+public void count() throws Exception{
+	ApplicationContext context = new GenericXmlAPplicationContext("applicationContext.xml");
+	
+	UserDao dao = context.getBean("userDao", UserDao.class);
+	User user1 = new User("user1", "user1", "user1");
+	User user2 = new User("user2", "user2", "user2");
+	User user3 = new User("user3", "user3", "user3");
+	
+	dao.deleteAll();
+	assertThat(dao.getCount(), is(0));
+	
+	dao.add(user1);
+	assertThat(dao.getCount(), is(1));
+	
+	dao.add(user2);
+	assertThat(dao.getCount(), is(2));
+	
+	dao.add(user3);
+	assertThat(dao.getCount(), is(3));
+}
+```
+
+#### addAndGet() 테스트 보완
+```java
+@Test
+public void addAndGet() throws Exception{
+	...
+	UserDao dao = context.getBean("userDao", UserDao.class);
+	User user1 = new User("user1", "user1", "user1");
+	User user2 = new User("user2", "user2", "user2");
+	
+	dao.add(user1);
+	dao.add(user2);
+	assertThat(dao.getCount(), is(2));
+	
+	User userget1 = dao.get(user1.getId());
+	asserThat(userget1.getName(), is(user1.getName()));
+		
+	User userget2 = dao.get(user2.getId());
+	asserThat(userget2.getName(), is(user2.getName()));
+}
+```
+
+#### get() 예외조건에 대한 테스트
+```java
+@Test(expected=EmptyResultDataAccessException.class)
+public void getUserFailure() throws Exception{
+	ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+	
+	UserDao dao = context.getBean("userDao", UserDao.class);
+	dao.deleteAll();
+	assertThat(dao.getCount(), is(0));
+	
+	dao.get("unknown_id"));//이 메소드 실행중에 예외가 발생해야 한다.
+}
+```
+@Test에 expected를 추가해놓으면 expected에 지정한 예외 발생 시 테스트가 성공한다.
+
+#### 테스트를 성공시키기 위한 코드의 수정
+```java
+public User get(String id) throws Exception{
+	...
+	ResultSet rs = ps.executeQuery();
+	
+	User user = null;
+	
+	if(rs.next()){
+		user = new User();
+		user.setId(rs.getString("id"));
+		user.setName(rs.getString("name"));
+		user.setPassword(rs.getString("password"));
+	}
+	
+	rs.close();
+	ps.close();
+	c.close();
+	
+	if(user == null) throw new EmptyResultDataAccessException(1);
+	
+	return user;
+}
+```
+
+#### 포괄적인 테스트
+테스트를 작성할 때 부정적인 케이스를 먼저 만드는 습관을 들이는게 좋다. get()메소드의 경우라면 존재하지 않는 id가 주어졌을 때는 어떻게 반응할지를 먼저 결정하고, 이를 확인할 수 있는 테스트를 먼저 만들려고 한다면 예외적 상황을 빠뜨리지 않을 것이다.
+
+### 테스트가 이끄는 개발
+
+#### 기능설계를 위한 테스트
+getUserFailure() 테스트의 기능을 정리해보면 아래와 같다.
+![ex_screenshot](./toby2_screenshot/getUserFailure.jpg)
+
+<br>
+
+#### 테스트 주도 개발
+만들고자 하는 기능의 내용을 담고있으면서 만들어진 코드를 검증도 해줄 수 있도록 테스트 코드를 먼저 만들고, 테스트를 성공하게 해주는 코드를 작성하는 방식의 개발 방법을 테스트 주도 개발(TDD, Test Driven Development)이라고 한다. <br>
+TDD는 아예 테스트를 먼저 만들고 그 테스트가 성공하도록 하는 코드만 만드는 식으로 진행하기 때문에 테스트를 빼먹지 않고 꼼꼼하게 만들어낼 수 있다. 또한 테스트를 작성하는 시간과 애플리케이션 코드를 작성하는 시간의 간격이 짧아진다. <br>
+지금까지 진행해온 개발도 TDD 방식이라고 할 수 있다. UserDao를 만들고 각각의 테스트를 만들면서 코드를 확장해왔다. 이 덕분에 테스트 코드를 추가로 작성할 필요 없이 바로바로 테스트해볼 수 있었다.
+
+<br>
+
+### 테스트 코드 개선
