@@ -350,7 +350,7 @@ public User get(String id) throws Exception{
 ### 테스트가 이끄는 개발
 
 #### 기능설계를 위한 테스트
-getUserFailure() 테스트의 기능을 정리해보면 아래와 같다.
+getUserFailure() 테스트의 기능을 정리해보면 아래와 같다.<br>
 ![ex_screenshot](./toby2_screenshot/getUserFailure.jpg)
 
 <br>
