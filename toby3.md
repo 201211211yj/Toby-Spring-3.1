@@ -108,7 +108,7 @@ public int getCount() throws SQLException{
 
 <br>
 
-### 분리와 재사용을 위한 디자인 패턴 적용
+### 분리와 재사용을 위한 디자인 패턴 적용 
 ```java
 public void deleteAll() throws SQLException{
 	Connection c = null;
@@ -147,9 +147,10 @@ public void deleteAll() throws SQLException{
 	}
 }
 ```
-<br>
+
 #### 메소드 추출
 변하지 않는 부분이 변하는 부분을 감싸고 있어서 변하는 부분만 추출해본다.
+
 ```java
 public void deleteAll() throws SQLException{
 	Connection c = null;
@@ -222,7 +223,7 @@ public interface StatementStrategy{
 
 이 인터페이스를 상속해서 실제 전략, 즉 바뀌는 부분인 PreparedStatement를 생성하는 클래스를 만들어보자.
 
-```
+```java
 public class DeleteAllStatement implements StatementStrategy{
 	public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 		PreparedStatement ps = c.prepareStatement("delete from users");
