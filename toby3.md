@@ -507,3 +507,67 @@ public class JdbcContext{
 	}
 }
 ```
+
+```java
+public class UserDao {
+	private JdbcContext jdbcContext;
+	
+	public void setJdbcContext(JdbcContext jdbcContext) {
+		this.jdbcContext = jdbcContext;
+	}
+	
+	public void add(final User user) throws SQLException {
+		this.jdbcContext.workWithStatementStrategy(
+			new StatementStrategy() { ... }
+		);
+	}
+	
+	public deleteAll() throws SQLException {
+		this.jdbcContext.workWithStatementStrategy(
+			new StatementStrategy() { ... }
+		);
+	}
+}
+```
+
+<br>
+
+#### 빈 의존관계 변경
+새롭게 작성된 오브젝트를 스프링 설정에 적용해보자. <br>
+스프링의 DI는 기본적으로 인터페이스를 사이에 두고 의존 클래스를 바꿔서 사용하는 게 목적이다. 하지만 위 경우 JdbcContext는 독립적인 서비스 오브젝트로서 의미가 있을 뿐이고 구현 방법이 바뀔 가능성이 없으므로 인터페이스로 구현할 필요가 없다. <br>
+test-applicationContext.xml 파일을 수정하면 다음과 같다.
+
+```xml
+<beans>
+	<bean id = "userDao" class="spring...UserDao">
+		<property name = "dataSource" ref="dataSource" />
+		<property name = "jdbcContext" ref="jdbcContext" />
+	</bean>	
+
+	<bean id = "jdbcContext" class="spring...JdbcContext">
+		<property name = "dataSource" ref="dataSource" />
+	</bean>	
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		...
+	</bean>
+<beans>
+```
+
+아직은 userDao의 모든 메소드가 jdbcContext를 사용하는것은 아니니, 기존 방법을 사용해서 동작하는 메소드를 위해 UserDao가 아직은 dataSource를 DI받도록 하고있다.
+
+<br>
+
+### JdbcContext의 특별한 DI
+#### 스프링 빈으로 DI
+이렇게 인터페이스를 사용하지 않고 DI를 적용하는 것은 문제가 된다고 생각할 수 있다. 그러나 스프링의 DI는 넓게 보자면 객체의 생성과 관계 설정에 대한 제어권한을 오브젝트에서 제거하고 외부로 위임했다는 IoC 개념을 포괄한다. 그런 의미에서 JdbcContext를 스프링을 이용해 UserDao 객체에서 사용하게 주입했다는 건 DI의 기본을 따르고 있다고 볼 수 있다. <br>
+인터페이스를 사용하지 않았지만 JdbcContext를 UserDao와 DI 구조로 만들어야 할 이유는 아래와 같다. <br>
+첫 째, JdbcContext는 스프링 컨테이너의 싱글톤 레지스트리에서 관리되는 싱글톤 빈이 되기 때문이다. JdbcContext는 그 자체로 변경되는 상태정보를 갖고있지 않다. 내부에서 사용할 dataSource라는 인스턴스 변수는 있지만, dataSource는 읽기전용이므로 JdbcContext가 싱글톤이 되는데 아무런 문제가 없다. JdbcContext는 JDBC 컨텍스트 메소드를 제공하는 일종의 서비스 오브젝트로서 의미가 있기에 싱글톤으로 등록되어 여러 오브젝트에서 쓰이는 것이 적절하다. <br>
+둘 째, JdbcContext가 DI를 통해 다른 빈에 의존하고 있기 때문이다. 이것이 중요한 이유이다. JdbcContext는 datsSource 프로퍼티를 통해 DataSource 오브젝트를 주입 받도록 되어있다. DI를 위해서는 주입되는 오브젝트와 주입받는 오브젝트 양쪽 모두 스프링 빈으로 등록해야한다. 스프링이 생성하고 관리하는 IoC대상이어야 DI에 참여할 수 있기 때문이다. 따라서 JdbcContext는 다른 빈을 DI받기 위해서라도 스프링 빈으로 등록되어야 한다.
+<br>
+<br>
+여기서 중요한 것은 인터페이스의 사용 여부다. 인터페이스가 없다는 건 UserDao와 JdbcContext가 매우 긴밀한 관계를 가지고 강하게 결합되어 있다는 의미이다. UserDao는 항상 JdbcContext와 함께 사용되어야 하기 때문이다. 비록 클래스는 구분되어있지만 이 둘은 강한 응집도를 갖고 있다. UserDao가 JDBC방식 대신 JPA나 Hibernate로 변경된다면 JdbcContext도 통째로 바꿔야 한다. JdbcContext는 DataSource와 달리 테스트에서도 다른 구현으로 대체해서 사용할 이유가 없다. 이런 경우는 굳이 인터페이스 보다는 강력한 결합을 가진 관계를 허용하는 것도 좋다. <br>
+
+<br>
+
+#### 코드를 이용하는 수동 DI
