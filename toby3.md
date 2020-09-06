@@ -567,7 +567,64 @@ test-applicationContext.xml 파일을 수정하면 다음과 같다.
 <br>
 <br>
 여기서 중요한 것은 인터페이스의 사용 여부다. 인터페이스가 없다는 건 UserDao와 JdbcContext가 매우 긴밀한 관계를 가지고 강하게 결합되어 있다는 의미이다. UserDao는 항상 JdbcContext와 함께 사용되어야 하기 때문이다. 비록 클래스는 구분되어있지만 이 둘은 강한 응집도를 갖고 있다. UserDao가 JDBC방식 대신 JPA나 Hibernate로 변경된다면 JdbcContext도 통째로 바꿔야 한다. JdbcContext는 DataSource와 달리 테스트에서도 다른 구현으로 대체해서 사용할 이유가 없다. 이런 경우는 굳이 인터페이스 보다는 강력한 결합을 가진 관계를 허용하는 것도 좋다. <br>
+단, 이런 클래스를 바로 사용하는 코드 구성을 DI에 적용하는 것은 가장 마지막 단계에서 고려해야한다. 그저 인터페이스를 만들기 귀찮아서 클래스를 사용하는 것은 잘못된 생각이다. 굳이 원한다면 JdbcContext에 인터페이스를 두고 UserDao에서 인터페이스를 사용하도록 만들어도 문제될 것은 없다.
 
 <br>
 
 #### 코드를 이용하는 수동 DI
+JdbcContext를 스프링 빈으로 등록해서 UserdAo에 DI하는 대신 사용할 수 있는 방법은 UserDao 내부에서 직접 DI를 적용하는 방법이다. <br>
+이 방법을 사용할 경우 싱글톤으로 만드려는 것은 포기해야 하지만 DAO 메소드가 호출될 때마다 JdbcContext 오브젝트를 새로 만들자는 것은 아니다. DAO마다 하나의 JdbcContext 오브젝트를 갖고있게 하는 것이다. DAO메소드에서 매번 만들어 사용한다면 수백만의 JdbcContext 오브젝트가 만들어지겠지만, DAO마다 하나씩만 만든다면 수백개면 충분할 것이다. JdbcContext는 내부에 두는 상태정보가 없기 때문에 메모리에 주는 부담도 거의 없고, 생성/제거 또한 자주되지 않기 때문에 GC에 대한 부담도 없다.<br>
+JdbcContext를 스프링 빈으로 등록하지 않았으므로 다른 누군가가 JdbcContext의 생성과 초기화를 책임져야 한다. JdbcContext의 제어권은 UserDao가 갖는 것이 적당하다. 자신이 사용할 오브젝트를 직접 만들고 초기화 하는 전통적인 방법을 사용하는 것이다. <br>
+남은 문제는 JdbcContext를 스프링 빈으로 등록해서 사용했던 두 번째 이유다. JdbcContext는 다른 빈을 인터페이스를 통해 간접적으로 의존하고 있다. 다른 빈을 의존하고있다면, 의존 오브젝트를 DI를 통해 제공받기 위해서라도 자신도 빈으로 등록되어야한다. 그렇기에 UserDao에서 JdbcContext를 직접 생성해서 사용하는 경우에도 JdbcContext는 DataSource 타입 빈을 다이내믹하게 주입받아서 사용해야 한다. 그렇지 않으면 DataSource 구현 클래스를 자유롭게 바꿔가면서 적용할 수 없다. 하지만 JdbcContext 자신은 스프링의 빈이 아니니 DI 컨테이너를 통해 DI 받을 수는 없다. <br>
+이런 경우에 사용할 수 있는 방법은 JdbcContext에 대한 제어권을 갖고 생성과 관리를 담당하는 UserDao에게 DI까지 맡기는 것이다. 오브젝트를 생성하고 의존 오브젝트를 수정자 메소드로 주입해주는 것이 바로 DI 동작 원리이기 때문이다. 그렇기에 UserDao를 임시로 DI 컨테이너처럼 동작하게 하면 된다.
+<br>
+
+![ex_screenshot](./toby3_screenshot/CodeDI.jpg)
+
+<br>
+
+```xml
+<beans>
+	<bean id = "userDao" class="spring...UserDao">
+		<property name = "dataSource" ref="dataSource" />
+	</bean>	
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		...
+	</bean>
+<beans>
+```
+
+<br>
+
+```java
+public class UserDao{
+	...
+	private JdbcContext jdbcContext;
+	
+	public void setDataSource(DataSource dataSource) {
+		this.jdbcContext = new JdbcContext(); // JdbcContext 생성 IoC
+		this.jdbcContext.setDataSource(dataSource); // 의존 오브젝트 주입(DI)
+		this.dataSource = dataSource; // 아직 JdbcContext를 적용하지 않은 메소드를 위해 저장해둔다.
+	}
+}
+```
+
+<br>
+
+이 방법의 장점은 굳이 인터페이스를 두지 않아도 될 만큼 긴밀한 관계를 갖는 DAO 클래스와 JdbcContext를 어색하게 따로 빈으로 분리하지 않고 내부에서 직접 만들어 사용하며 다른 오브젝트에 대한 DI를 적용할 수 있다는 점이다.
+
+<br>
+
+## 템플릿과 콜백
+지금까지 UserDao와 StatementStrategy, JdbcContext를 이용해 만든 코드는 일종의 전략 패턴이 적용된 것이라고 볼 수 있다. 복잡하지만 바뀌지 않는 일정한 패턴을 갖는 작업 흐름이 존재하고 그중 일부분만 자주 바꿔서 사용하는 경우에 적합한 구조이다. 이런 방식을 스프링에서 *템플릿/콜백* 패턴이라고 부른다. 전략 패턴의 컨텍스트를 템플릿이라 부르고 익명  내부 클래스로 만들어지는 오브젝트를 콜백이라고 부른다.
+
+<br>
+
+### 템플릿/콜백의 동작 원리
+템플릿은 고정된 작업 흐름을 가진 코드를 재사용한다는 의미에서 붙인 이름이다. 콜백은 템플릿 안에서 호출되는 것을 목적으로 만들어진 오브젝트를 말한다.
+
+<br>
+
+#### 템플릿/콜백의 특징
+여러개의 메소드를 가진 일반적인 인터페이스를 사용할 수 있는 전략 패턴의 전략과 달리 템플릿/콜백 패턴의 콜백은 보통 단일 메소드 인터페이스를 사용한다. 템플릿의 작업 흐름 중 특정 기능을 위해 한 번 호출되는 경우가 일반적이기 떄문이다. 하나의 템플릿에서 여러 가지 종류의 전략을 사용해야 한다면 하나 이상의 콜백 오브젝트를 사용할 수도 있다. 콜백은 일반적으로 하나의 메소드를 가진 인터페이스를 구현한 익명 내부 클래스로 만들어진다고 보면 된다. <br>

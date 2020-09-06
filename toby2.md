@@ -1,9 +1,9 @@
-# 2. Å×½ºÆ®
+# 2. í…ŒìŠ¤íŠ¸
 
-## 2.1 UserDaoTest ´Ù½Ãº¸±â
+## 2.1 UserDaoTest ë‹¤ì‹œë³´ê¸°
 
-### UserDaoTestÀÇ Æ¯Â¡
-¾Æ·¡ Å×½ºÆ® ÄÚµå´Â main() ¸Þ¼Òµå¸¦ ÀÌ¿ëÇØ UserDao ¿ÀºêÁ§Æ®ÀÇ add(), get() ¸Þ¼Òµå¸¦ È£ÃâÇÏ°í ±× °á°ú¸¦ Ãâ·ÂÇÑ´Ù.<br>
+### UserDaoTestì˜ íŠ¹ì§•
+ì•„ëž˜ í…ŒìŠ¤íŠ¸ ì½”ë“œëŠ” main() ë©”ì†Œë“œë¥¼ ì´ìš©í•´ UserDao ì˜¤ë¸Œì íŠ¸ì˜ add(), get() ë©”ì†Œë“œë¥¼ í˜¸ì¶œí•˜ê³  ê·¸ ê²°ê³¼ë¥¼ ì¶œë ¥í•œë‹¤.<br>
 ```java
 public class UserDaoTest{
 	public static void main(String[] args) throws SQLException{
@@ -13,43 +13,43 @@ public class UserDaoTest{
 		
 		User user = new User();
 		user.setId("user");
-		user.setName("¿µÁØ");
+		user.setName("ì˜ì¤€");
 		user.setPassword("hello");
 		
 		dao.add(user);
 		
-		System.out.println(user.getId() + "µî·Ï ¼º°ø");
+		System.out.println(user.getId() + "ë“±ë¡ ì„±ê³µ");
 		
 		User user2 = dao.get(user.getId());
 		System.out.println(user2.getName());
 		
-		System.out.println(user2.getId() + "Á¶È¸ ¼º°ø");
+		System.out.println(user2.getId() + "ì¡°íšŒ ì„±ê³µ");
 	}
 }
 ```
 
 <br>
 
-#### À¥À» ÅëÇÑ DAO Å×½ºÆ® ¹æ¹ýÀÇ ¹®Á¦Á¡
-À¥ È­¸éÀ» ÅëÇØ °ªÀ» ÀÔ·ÂÇÏ°í, ±â´ÉÀ» ¼öÇàÇÏ°í, °á°ú¸¦ È®ÀÎÇÏ´Â ¹æ¹ýÀº °¡Àå ÈçÈ÷ ¾º´Â ¹æ¹ýÀÌÁö¸¸ DAOÀÚÃ¼¿¡ ´ëÇÑ Å×½ºÆ®·Î´Â ´ÜÁ¡ÀÌ ¸¹´Ù. DAO»Ó¸¸ ¾Æ´Ï¶ó ¼­ºñ½º Å¬·¡½º, ÄÁÆ®·Ñ·¯, JSP ºä µî ¸ðµç ·¹ÀÌ¾îÀÇ ±â´ÉÀ» ´Ù ¸¸µé°í ³ª¼­¾ß Å×½ºÆ®°¡ °¡´ÉÇÏ´Ù´Â Á¡ÀÌ °¡Àå Å« ¹®Á¦´Ù. Å×½ºÆ®¸¦ ÇÏ´Â Áß¿¡ ¿¡·¯°¡ ³ª°Å³ª Å×½ºÆ®°¡ ½ÇÆÐÇßµû¸é, °ú¿¬ ¾îµð¿¡¼­ ¹®Á¦°¡ ¹ß»ýÇß´ÂÁö¸¦ Ã£¾Æ³»¾ß ÇÏ´Â ¼ö°í°¡ ÇÊ¿äÇÏ´Ù. ÀÌ·± ¹æ½ÄÀ¸·Î Å×½ºÆ®ÇÏ´Â °ÍÀº ¿À·ù°¡ ÀÖÀ» ¶§ ºü¸£°í Á¤È®ÇÏ°Ô ´ëÀÀÇÏ±â°¡ Èûµé´Ù´Â ¹®Á¦°¡ ÀÖ´Ù.
+#### ì›¹ì„ í†µí•œ DAO í…ŒìŠ¤íŠ¸ ë°©ë²•ì˜ ë¬¸ì œì 
+ì›¹ í™”ë©´ì„ í†µí•´ ê°’ì„ ìž…ë ¥í•˜ê³ , ê¸°ëŠ¥ì„ ìˆ˜í–‰í•˜ê³ , ê²°ê³¼ë¥¼ í™•ì¸í•˜ëŠ” ë°©ë²•ì€ ê°€ìž¥ í”ížˆ ì”ŒëŠ” ë°©ë²•ì´ì§€ë§Œ DAOìžì²´ì— ëŒ€í•œ í…ŒìŠ¤íŠ¸ë¡œëŠ” ë‹¨ì ì´ ë§Žë‹¤. DAOë¿ë§Œ ì•„ë‹ˆë¼ ì„œë¹„ìŠ¤ í´ëž˜ìŠ¤, ì»¨íŠ¸ë¡¤ëŸ¬, JSP ë·° ë“± ëª¨ë“  ë ˆì´ì–´ì˜ ê¸°ëŠ¥ì„ ë‹¤ ë§Œë“¤ê³  ë‚˜ì„œì•¼ í…ŒìŠ¤íŠ¸ê°€ ê°€ëŠ¥í•˜ë‹¤ëŠ” ì ì´ ê°€ìž¥ í° ë¬¸ì œë‹¤. í…ŒìŠ¤íŠ¸ë¥¼ í•˜ëŠ” ì¤‘ì— ì—ëŸ¬ê°€ ë‚˜ê±°ë‚˜ í…ŒìŠ¤íŠ¸ê°€ ì‹¤íŒ¨í–ˆë”°ë©´, ê³¼ì—° ì–´ë””ì—ì„œ ë¬¸ì œê°€ ë°œìƒí–ˆëŠ”ì§€ë¥¼ ì°¾ì•„ë‚´ì•¼ í•˜ëŠ” ìˆ˜ê³ ê°€ í•„ìš”í•˜ë‹¤. ì´ëŸ° ë°©ì‹ìœ¼ë¡œ í…ŒìŠ¤íŠ¸í•˜ëŠ” ê²ƒì€ ì˜¤ë¥˜ê°€ ìžˆì„ ë•Œ ë¹ ë¥´ê³  ì •í™•í•˜ê²Œ ëŒ€ì‘í•˜ê¸°ê°€ íž˜ë“¤ë‹¤ëŠ” ë¬¸ì œê°€ ìžˆë‹¤.
 
 <br>
 
-#### ÀÛÀº ´ÜÀ§ÀÇ Å×½ºÆ®
-Å×½ºÆ®ÇÏ°íÀÚ ÇÏ´Â ´ë»óÀÌ ¸íÈ®ÇÏ´Ù¸é ±× ´ë»ó¿¡¸¸ ÁýÁßÇØ¼­ Å×½ºÆ®ÇÏ´Â °ÍÀÌ ¹Ù¶÷Á÷ÇÏ´Ù. UserDaoTest´Â ÇÑ °¡Áö °ü½É¿¡ ÁýÁßÇÒ ¼ö ÀÖ°Ô ÀÛÀº ´ÜÀ§·Î ¸¸µé¾îÁø Å×½ºÆ®´Ù. À¥ ÀÎÅÍÆäÀÌ½º, MVC Å¬·¡½º, ¼­ºñ½º ¿ÀºêÁ§Æ® µîÀÌ ÇÊ¿ä°¡ ¾ø´Ù. ¼­¹ö¿¡ ¹èÆ÷ÇÒ ÇÊ¿äµµ ¾ø´Ù. <br>
-ÀÌ·¸°Ô ÀÛÀº ´ÜÀ§ÀÇ ÄÚµå¿¡ ´ëÇØ Å×½ºÆ®¸¦ ¼öÇàÇÑ °ÍÀ» ´ÜÀ§ Å×½ºÆ®(unit test)¶ó°í ÇÑ´Ù. ¿©±â¼­ ¸»ÇÏ´Â ´ÜÀ§¶õ ¹«¾ùÀÎÁö, Å©±â¿Í ¹üÀ§°¡ ¾î´À Á¤µµÀÎÁö µü Á¤ÇØÁø °Ç ¾Æ´Ï´Ù. ÃæºÐÈ÷ ÇÏ³ªÀÇ °ü½É¿¡ ÁýÁßÇØ¼­ È¿À²ÀûÀ¸·Î Å×½ºÆ®ÇÒ ¸¸ÇÑ ¹üÀ§ÀÇ ´ÜÀ§¶ó°í º¸¸é µÈ´Ù. <br>
+#### ìž‘ì€ ë‹¨ìœ„ì˜ í…ŒìŠ¤íŠ¸
+í…ŒìŠ¤íŠ¸í•˜ê³ ìž í•˜ëŠ” ëŒ€ìƒì´ ëª…í™•í•˜ë‹¤ë©´ ê·¸ ëŒ€ìƒì—ë§Œ ì§‘ì¤‘í•´ì„œ í…ŒìŠ¤íŠ¸í•˜ëŠ” ê²ƒì´ ë°”ëžŒì§í•˜ë‹¤. UserDaoTestëŠ” í•œ ê°€ì§€ ê´€ì‹¬ì— ì§‘ì¤‘í•  ìˆ˜ ìžˆê²Œ ìž‘ì€ ë‹¨ìœ„ë¡œ ë§Œë“¤ì–´ì§„ í…ŒìŠ¤íŠ¸ë‹¤. ì›¹ ì¸í„°íŽ˜ì´ìŠ¤, MVC í´ëž˜ìŠ¤, ì„œë¹„ìŠ¤ ì˜¤ë¸Œì íŠ¸ ë“±ì´ í•„ìš”ê°€ ì—†ë‹¤. ì„œë²„ì— ë°°í¬í•  í•„ìš”ë„ ì—†ë‹¤. <br>
+ì´ë ‡ê²Œ ìž‘ì€ ë‹¨ìœ„ì˜ ì½”ë“œì— ëŒ€í•´ í…ŒìŠ¤íŠ¸ë¥¼ ìˆ˜í–‰í•œ ê²ƒì„ ë‹¨ìœ„ í…ŒìŠ¤íŠ¸(unit test)ë¼ê³  í•œë‹¤. ì—¬ê¸°ì„œ ë§í•˜ëŠ” ë‹¨ìœ„ëž€ ë¬´ì—‡ì¸ì§€, í¬ê¸°ì™€ ë²”ìœ„ê°€ ì–´ëŠ ì •ë„ì¸ì§€ ë”± ì •í•´ì§„ ê±´ ì•„ë‹ˆë‹¤. ì¶©ë¶„ížˆ í•˜ë‚˜ì˜ ê´€ì‹¬ì— ì§‘ì¤‘í•´ì„œ íš¨ìœ¨ì ìœ¼ë¡œ í…ŒìŠ¤íŠ¸í•  ë§Œí•œ ë²”ìœ„ì˜ ë‹¨ìœ„ë¼ê³  ë³´ë©´ ëœë‹¤. <br>
 
 <br>
 
-### UserDaoTestÀÇ ¹®Á¦Á¡
-* **¼öµ¿ È®ÀÎ ÀÛ¾÷ÀÇ ¹ø°Å·Î¿ò** : UserDaoTest´Â ¸ðµÎ ÀÚµ¿À¸·Î ÁøÇàÇÏµµ·Ï ¸¸µé¾îÁ³Áö¸¸, ¿©ÀüÈ÷ »ç¶÷ÀÇ ´«À¸·Î È®ÀÎÇÏ´Â °úÁ¤ÀÌ ÇÊ¿äÇÏ´Ù. add()¿¡¼­ User Á¤º¸¸¦ DB¿¡ µî·ÏÇÏ°í, ÀÌ¸¦ ´Ù½Ã get()À» ÀÌ¿ëÇØ °¡Á®¿ÔÀ» ¶§ ÀÔ·ÂÇÑ °ª°ú °¡Á®¿Â °ªÀÌ ÀÏÄ¡ÇÏ´ÂÁö¸¦ Å×½ºÆ®ÄÚµå´Â È®ÀÎÇØÁÖÁö ¾Ê´Â´Ù.
-* **½ÇÇà ÀÛ¾÷ÀÇ ¹ø°Å·Î¿ò** : ¾Æ¹«¸® °£´ÜÈ÷ ½ÇÇà °¡´ÉÇÑ main()¸Þ¼Òµå¶ó ÇØµµ ¸Å¹ø ±×°ÍÀ» ½ÇÇàÇÏ´Â °ÍÀº Á¦ÀÏ ¹ø°Å·Ó´Ù. ÀüÃ¼ ±â´ÉÀ» Å×½ºÆ®ÇØº¸±â À§ÇØ main()¸Þ¼Òµå¸¦ ¼ö¹é ¹ø ½ÇÇàÇÏ´Â ¼ö°í°¡ ÇÊ¿äÇÒ ¼öµµ ÀÖ´Ù.
+### UserDaoTestì˜ ë¬¸ì œì 
+* **ìˆ˜ë™ í™•ì¸ ìž‘ì—…ì˜ ë²ˆê±°ë¡œì›€** : UserDaoTestëŠ” ëª¨ë‘ ìžë™ìœ¼ë¡œ ì§„í–‰í•˜ë„ë¡ ë§Œë“¤ì–´ì¡Œì§€ë§Œ, ì—¬ì „ížˆ ì‚¬ëžŒì˜ ëˆˆìœ¼ë¡œ í™•ì¸í•˜ëŠ” ê³¼ì •ì´ í•„ìš”í•˜ë‹¤. add()ì—ì„œ User ì •ë³´ë¥¼ DBì— ë“±ë¡í•˜ê³ , ì´ë¥¼ ë‹¤ì‹œ get()ì„ ì´ìš©í•´ ê°€ì ¸ì™”ì„ ë•Œ ìž…ë ¥í•œ ê°’ê³¼ ê°€ì ¸ì˜¨ ê°’ì´ ì¼ì¹˜í•˜ëŠ”ì§€ë¥¼ í…ŒìŠ¤íŠ¸ì½”ë“œëŠ” í™•ì¸í•´ì£¼ì§€ ì•ŠëŠ”ë‹¤.
+* **ì‹¤í–‰ ìž‘ì—…ì˜ ë²ˆê±°ë¡œì›€** : ì•„ë¬´ë¦¬ ê°„ë‹¨ížˆ ì‹¤í–‰ ê°€ëŠ¥í•œ main()ë©”ì†Œë“œë¼ í•´ë„ ë§¤ë²ˆ ê·¸ê²ƒì„ ì‹¤í–‰í•˜ëŠ” ê²ƒì€ ì œì¼ ë²ˆê±°ë¡­ë‹¤. ì „ì²´ ê¸°ëŠ¥ì„ í…ŒìŠ¤íŠ¸í•´ë³´ê¸° ìœ„í•´ main()ë©”ì†Œë“œë¥¼ ìˆ˜ë°± ë²ˆ ì‹¤í–‰í•˜ëŠ” ìˆ˜ê³ ê°€ í•„ìš”í•  ìˆ˜ë„ ìžˆë‹¤.
 
 <br>
 
-## 2.2 UserDaoTest °³¼±
-### Å×½ºÆ® °ËÁõÀÇ ÀÚµ¿È­
-Ã¹ ¹øÂ° ¹®Á¦Á¡ÀÎ Å×½ºÆ® °á°úÀÇ °ËÁõ ºÎºÐÀ» ÄÚµå·Î ¸¸µé¾îº¸ÀÚ.
+## 2.2 UserDaoTest ê°œì„ 
+### í…ŒìŠ¤íŠ¸ ê²€ì¦ì˜ ìžë™í™”
+ì²« ë²ˆì§¸ ë¬¸ì œì ì¸ í…ŒìŠ¤íŠ¸ ê²°ê³¼ì˜ ê²€ì¦ ë¶€ë¶„ì„ ì½”ë“œë¡œ ë§Œë“¤ì–´ë³´ìž.
 ```java
 public class UserDaoTest{
 	public static void main(String[] args) throws SQLException{
@@ -59,33 +59,33 @@ public class UserDaoTest{
 		
 		User user = new User();
 		user.setId("user");
-		user.setName("¿µÁØ");
+		user.setName("ì˜ì¤€");
 		
 		dao.add(user);
 				
 		User user2 = dao.get(user.getId());
 		
 		if(!user.getName().equals(user2.getName())){
-			System.out.println("Å×½ºÆ® ½ÇÆÐ (name)");
+			System.out.println("í…ŒìŠ¤íŠ¸ ì‹¤íŒ¨ (name)");
 		}else if(!user.getPassword().equals(user2.getPassword())){
-			System.out.println("Å×½ºÆ® ½ÇÆÐ (password)");
+			System.out.println("í…ŒìŠ¤íŠ¸ ì‹¤íŒ¨ (password)");
 		}else{
-			System.out.println("Å×½ºÆ® ¼º°ø");
+			System.out.println("í…ŒìŠ¤íŠ¸ ì„±ê³µ");
 		}
 	}
 }
 ```
 
-### Å×½ºÆ®ÀÇ È¿À²ÀûÀÎ ¼öÇà°ú °á°ú °ü¸®
-Á» ´õ Æí¸®ÇÏ°Ô °á°ú¸¦ È®ÀÎÇÏ·Á¸é main()¸Þ¼Òµå ¸¸À¸·Î´Â ÇÑ°è°¡ ÀÖ´Ù. ÀÚ¹Ù¿¡´Â ´Ü¼øÇÏ¸é¼­µµ ½Ç¿ëÀûÀÎ Å×½ºÆ®¸¦ À§ÇÑ µµ±¸°¡ ¿©·¯°¡Áö Á¸ÀçÇÑ´Ù.
+### í…ŒìŠ¤íŠ¸ì˜ íš¨ìœ¨ì ì¸ ìˆ˜í–‰ê³¼ ê²°ê³¼ ê´€ë¦¬
+ì¢€ ë” íŽ¸ë¦¬í•˜ê²Œ ê²°ê³¼ë¥¼ í™•ì¸í•˜ë ¤ë©´ main()ë©”ì†Œë“œ ë§Œìœ¼ë¡œëŠ” í•œê³„ê°€ ìžˆë‹¤. ìžë°”ì—ëŠ” ë‹¨ìˆœí•˜ë©´ì„œë„ ì‹¤ìš©ì ì¸ í…ŒìŠ¤íŠ¸ë¥¼ ìœ„í•œ ë„êµ¬ê°€ ì—¬ëŸ¬ê°€ì§€ ì¡´ìž¬í•œë‹¤.
 
-#### JUnit Å×½ºÆ®·Î ÀüÈ¯
-Å×½ºÆ®¸¦ ÇÁ·¹ÀÓ¿öÅ©¿¡ ÀÇÇØ µ¿ÀÛÇÏ°Ô ÇÔÀ¸·Î½á IoC¸¦ Àû¿ëÇÑ´Ù.
+#### JUnit í…ŒìŠ¤íŠ¸ë¡œ ì „í™˜
+í…ŒìŠ¤íŠ¸ë¥¼ í”„ë ˆìž„ì›Œí¬ì— ì˜í•´ ë™ìž‘í•˜ê²Œ í•¨ìœ¼ë¡œì¨ IoCë¥¼ ì ìš©í•œë‹¤.
 
 <br>
 
-#### Å×½ºÆ® ¸Þ¼ÒµåÀÇ ÀüÈ¯
-°¡Àå ¸ÕÀú ÇÒ ÀÏÀº main()¸Þ¼Òµå¿¡ ÀÖ´ø Å×½ºÆ® ÄÚµå¸¦ public ¸Þ¼Òµå·Î º¯°æÇÏ°í @Test ¾î³ëÅ×ÀÌ¼ÇÀ» ºÙÇôÁØ´Ù.
+#### í…ŒìŠ¤íŠ¸ ë©”ì†Œë“œì˜ ì „í™˜
+ê°€ìž¥ ë¨¼ì € í•  ì¼ì€ main()ë©”ì†Œë“œì— ìžˆë˜ í…ŒìŠ¤íŠ¸ ì½”ë“œë¥¼ public ë©”ì†Œë“œë¡œ ë³€ê²½í•˜ê³  @Test ì–´ë…¸í…Œì´ì…˜ì„ ë¶™í˜€ì¤€ë‹¤.
 ```java
 import org.junit.Test;
 ...
@@ -102,8 +102,8 @@ public class UserDaoTest{
 
 <br>
 
-#### °ËÁõ ÄÚµå ÀüÈ¯
-if/else ¹®ÀåÀ» JUnitÀÌ Á¦°øÇÏ´Â ¹æ¹ýÀ» ÀÌ¿ëÇØ ÀüÈ¯ÇØº¸ÀÚ.
+#### ê²€ì¦ ì½”ë“œ ì „í™˜
+if/else ë¬¸ìž¥ì„ JUnitì´ ì œê³µí•˜ëŠ” ë°©ë²•ì„ ì´ìš©í•´ ì „í™˜í•´ë³´ìž.
 ```java
 if(!user.getName().equals(user2.getName())){...}
 ```
@@ -112,7 +112,7 @@ if(!user.getName().equals(user2.getName())){...}
 ```java
 assertThat(user2.getName(), is(user.getName()));
 ```
-assertThat()¸Þ¼Òµå´Â Ã¹ ¹øÂ° ÆÄ¶ó¹ÌÅÍÀÇ °ªÀ» µÚ¿¡ ³ª¿À´Â ¸ÅÃ³(matcher)¶ó°í ºÒ¸®´Â Á¶°ÇÀ¸·Î ºñ±³ÇØ¼­ ÀÏÄ¡ÇÏ¸é ´ÙÀ½À¸·Î ³Ñ¾î°¡°í, ¾Æ´Ï¸é Å×½ºÆ®°¡ ½ÇÆÐÇÏµµ·Ï ¸¸µé¾îÁØ´Ù.
+assertThat()ë©”ì†Œë“œëŠ” ì²« ë²ˆì§¸ íŒŒë¼ë¯¸í„°ì˜ ê°’ì„ ë’¤ì— ë‚˜ì˜¤ëŠ” ë§¤ì²˜(matcher)ë¼ê³  ë¶ˆë¦¬ëŠ” ì¡°ê±´ìœ¼ë¡œ ë¹„êµí•´ì„œ ì¼ì¹˜í•˜ë©´ ë‹¤ìŒìœ¼ë¡œ ë„˜ì–´ê°€ê³ , ì•„ë‹ˆë©´ í…ŒìŠ¤íŠ¸ê°€ ì‹¤íŒ¨í•˜ë„ë¡ ë§Œë“¤ì–´ì¤€ë‹¤.
 <br>
 
 ```java
@@ -127,7 +127,7 @@ public class UserDaoTest{
 		
 		User user = new User();
 		user.setId("user");
-		user.setName("¿µÁØ");
+		user.setName("ì˜ì¤€");
 		
 		dao.add(user);
 				
@@ -138,11 +138,11 @@ public class UserDaoTest{
 	}
 }
 ```
-¡á Ãß°¡ÇÒ ¶óÀÌºê·¯¸®
+â–  ì¶”ê°€í•  ë¼ì´ë¸ŒëŸ¬ë¦¬
 * com.springsource.org.junit
 
-#### JUnit Å×½ºÆ® ½ÇÇà
-JUnit ÇÁ·¹ÀÓ¿öÅ©¸¦ ÀÌ¿ëÇØ ¾Õ¿¡¼­ ¸¸µç Å×½ºÆ® ¸Þ¼Òµå¸¦ ½ÇÇàÇÏµµ·Ï ÇØº¸ÀÚ.
+#### JUnit í…ŒìŠ¤íŠ¸ ì‹¤í–‰
+JUnit í”„ë ˆìž„ì›Œí¬ë¥¼ ì´ìš©í•´ ì•žì—ì„œ ë§Œë“  í…ŒìŠ¤íŠ¸ ë©”ì†Œë“œë¥¼ ì‹¤í–‰í•˜ë„ë¡ í•´ë³´ìž.
 ```java
 import org.junit.runner.JUnitCore;
 ...
@@ -151,7 +151,7 @@ public static void main(String[] args){
 }
 ```
 <br>
-ÀÌ ÄÚµå¸¦ ½ÇÇàÇÏ¸é ´ÙÀ½°ú °°Àº ¸Þ¼¼Áö°¡ Ãâ·ÂµÈ´Ù.
+ì´ ì½”ë“œë¥¼ ì‹¤í–‰í•˜ë©´ ë‹¤ìŒê³¼ ê°™ì€ ë©”ì„¸ì§€ê°€ ì¶œë ¥ëœë‹¤.
 
 ```
 JUnit version 4.7
@@ -159,14 +159,14 @@ Time: 0.578
 OK (1 test)
 ```
 
-¸¸¾à ÄÚµå¿¡ ÀÌ»óÀÌ ÀÖ¾î °ËÁõ¿¡ ½ÇÆÐÇÒ °æ¿ì ´ÙÀ½°ú °°Àº ¸Þ¼¼Áö°¡ Ãâ·ÂµÈ´Ù.
+ë§Œì•½ ì½”ë“œì— ì´ìƒì´ ìžˆì–´ ê²€ì¦ì— ì‹¤íŒ¨í•  ê²½ìš° ë‹¤ìŒê³¼ ê°™ì€ ë©”ì„¸ì§€ê°€ ì¶œë ¥ëœë‹¤.
 
 ```
 Time: 1.094
 There was 1 failure:
 1) addAndGet(spring...UserDaoTest)
 java.lang.AssertionError:
-Expected: is "¿µÁØ"
+Expected: is "ì˜ì¤€"
      got: null
      ...
         at spring...UserDaoTest.main(UserDaoTest.java:36)
@@ -176,24 +176,24 @@ Tests run : 1, Failures: 1
 
 <br>
 
-## 2.3 °³¹ßÀÚ¸¦ À§ÇÑ Å×½ºÆÃ ÇÁ·¹ÀÓ¿öÅ© JUnit
-### JUnit Å×½ºÆ® ½ÇÇà ¹æ¹ý
+## 2.3 ê°œë°œìžë¥¼ ìœ„í•œ í…ŒìŠ¤íŒ… í”„ë ˆìž„ì›Œí¬ JUnit
+### JUnit í…ŒìŠ¤íŠ¸ ì‹¤í–‰ ë°©ë²•
 
 #### IDE
-ÀÌÅ¬¸³½º¿¡¼­ @Test°¡ µé¾î ÀÖ´Â Å×½ºÆ® Å¬·¡½º¸¦ ¼±ÅÃÇÑ µÚ¿¡ Run As - JUnit Test¸¦ ¼±ÅÃÇÏ¸é Å×½ºÆ®°¡ ÀÚµ¿À¸·Î ½ÇÇàµÈ´Ù.
+ì´í´ë¦½ìŠ¤ì—ì„œ @Testê°€ ë“¤ì–´ ìžˆëŠ” í…ŒìŠ¤íŠ¸ í´ëž˜ìŠ¤ë¥¼ ì„ íƒí•œ ë’¤ì— Run As - JUnit Testë¥¼ ì„ íƒí•˜ë©´ í…ŒìŠ¤íŠ¸ê°€ ìžë™ìœ¼ë¡œ ì‹¤í–‰ëœë‹¤.
 <br>
-Å×½ºÆ®°¡ ½ÃÀÛµÇ¸é JUnit Å×½ºÆ® Á¤º¸¸¦ Ç¥½ÃÇØÁÖ´Â ºä(View)°¡ ³ªÅ¸³ª¼­ Å×½ºÆ® ÁøÇà »óÈ²À» º¸¿©ÁØ´Ù.
+í…ŒìŠ¤íŠ¸ê°€ ì‹œìž‘ë˜ë©´ JUnit í…ŒìŠ¤íŠ¸ ì •ë³´ë¥¼ í‘œì‹œí•´ì£¼ëŠ” ë·°(View)ê°€ ë‚˜íƒ€ë‚˜ì„œ í…ŒìŠ¤íŠ¸ ì§„í–‰ ìƒí™©ì„ ë³´ì—¬ì¤€ë‹¤.
 <br>
-¼Ò½º Æ®¸®¸¦ ¼±ÅÃÇÏ°í Run As - JUnit Test¸¦ ½ÇÇàÇÏ¸é ÇØ´ç ÆÐÅ°Áö ¾Æ·¡¿¡ ÀÖ´Â ¸ðµç JUnit Å×½ºÆ®¸¦ ÇÑ¹ø¿¡ ½ÇÇàÇØÁØ´Ù.
+ì†ŒìŠ¤ íŠ¸ë¦¬ë¥¼ ì„ íƒí•˜ê³  Run As - JUnit Testë¥¼ ì‹¤í–‰í•˜ë©´ í•´ë‹¹ íŒ¨í‚¤ì§€ ì•„ëž˜ì— ìžˆëŠ” ëª¨ë“  JUnit í…ŒìŠ¤íŠ¸ë¥¼ í•œë²ˆì— ì‹¤í–‰í•´ì¤€ë‹¤.
 
-#### ºôµå Åø
-ANT³ª ¸ÞÀÌºì(Maven) µîÀÇ JUnit ÇÃ·¯±×ÀÎ »ç¿ë
+#### ë¹Œë“œ íˆ´
+ANTë‚˜ ë©”ì´ë¸(Maven) ë“±ì˜ JUnit í”ŒëŸ¬ê·¸ì¸ ì‚¬ìš©
 
-### Å×½ºÆ® °á°úÀÇ ÀÏ°ü¼º
-Áö±Ý±îÁö Å×½ºÆ®¸¦ ÁøÇàÇÒ ‹š´Â ¸Å¹ø UserDaoTest¸¦ ¼öÇàÇÏ¸é DBÀÇ µ¥ÀÌÅÍ¸¦ Áö¿öÁà¾ß Çß´Ù.
+### í…ŒìŠ¤íŠ¸ ê²°ê³¼ì˜ ì¼ê´€ì„±
+ì§€ê¸ˆê¹Œì§€ í…ŒìŠ¤íŠ¸ë¥¼ ì§„í–‰í•  ë–„ëŠ” ë§¤ë²ˆ UserDaoTestë¥¼ ìˆ˜í–‰í•˜ë©´ DBì˜ ë°ì´í„°ë¥¼ ì§€ì›Œì¤˜ì•¼ í–ˆë‹¤.
 
-#### deleteAll()ÀÇ getCount() Ãß°¡
-¡á deleteAll<br>
+#### deleteAll()ì˜ getCount() ì¶”ê°€
+â–  deleteAll<br>
 ```java
 public void deleteAll() throws Exception{
 	Connection c = dataSource.getConnection();
@@ -205,7 +205,7 @@ public void deleteAll() throws Exception{
 	c.close();
 }
 ```
-¡á getCount()<br>
+â–  getCount()<br>
 ```java
 public int getCount() throws Exception{
 	Connection c = dataSource.getConnection();
@@ -222,7 +222,7 @@ public int getCount() throws Exception{
 }
 ```
 
-#### deleteAll()°ú getCount() Å×½ºÆ®
+#### deleteAll()ê³¼ getCount() í…ŒìŠ¤íŠ¸
 ```java
 @Test
 public void addAndGet() throws Exception{
@@ -240,12 +240,12 @@ public void addAndGet() throws Exception{
 }
 ```
 
-### Æ÷°ýÀûÀÎ Å×½ºÆ®
-¾Õ¿¡¼­ getCount() ¸Þ¼Òµå¸¦ Å×½ºÆ®¿¡ Àû¿ëÇÏ±ä ÇßÁö¸¸ µÎ°³ ÀÌ»óÀÇ ·¹ÄÚµå¸¦ add()ÇßÀ» ¶§´Â Àß µÉ¼öµµ ÀÖ°ÚÁö¸¸ ¹ÌÃ³ »ý°¢ÇÏÁö ¸øÇÑ ¹®Á¦°¡ ¼û¾îÀÖÀ»¼öµµ ÀÖ´Ù.
+### í¬ê´„ì ì¸ í…ŒìŠ¤íŠ¸
+ì•žì—ì„œ getCount() ë©”ì†Œë“œë¥¼ í…ŒìŠ¤íŠ¸ì— ì ìš©í•˜ê¸´ í–ˆì§€ë§Œ ë‘ê°œ ì´ìƒì˜ ë ˆì½”ë“œë¥¼ add()í–ˆì„ ë•ŒëŠ” ìž˜ ë ìˆ˜ë„ ìžˆê² ì§€ë§Œ ë¯¸ì²˜ ìƒê°í•˜ì§€ ëª»í•œ ë¬¸ì œê°€ ìˆ¨ì–´ìžˆì„ìˆ˜ë„ ìžˆë‹¤.
 
 <br>
 
-#### getCount() Å×½ºÆ®
+#### getCount() í…ŒìŠ¤íŠ¸
 
 ```java
 public User(String id, String name, String password){
@@ -254,7 +254,7 @@ public User(String id, String name, String password){
 	this.password = password;
 }
 
-public User(){// ÀÚ¹ÙºóÀÇ ±Ô¾àÀ» µû¸£´Â Å¬·¹½º¿¡ »ý¼ºÀÚ¸¦ ¸í½ÃÀûÀ¸·Î Ãß°¡ÇßÀ» °æ¿ì¿¡´Â ÆÄ¶ó¹ÌÅÍ ¾ø´Â »ý¼ºÀÚµµ ÀÛ¼ºÇØÁà¾ßÇÑ´Ù.
+public User(){// ìžë°”ë¹ˆì˜ ê·œì•½ì„ ë”°ë¥´ëŠ” í´ë ˆìŠ¤ì— ìƒì„±ìžë¥¼ ëª…ì‹œì ìœ¼ë¡œ ì¶”ê°€í–ˆì„ ê²½ìš°ì—ëŠ” íŒŒë¼ë¯¸í„° ì—†ëŠ” ìƒì„±ìžë„ ìž‘ì„±í•´ì¤˜ì•¼í•œë‹¤.
 
 }
 ```
@@ -283,7 +283,7 @@ public void count() throws Exception{
 }
 ```
 
-#### addAndGet() Å×½ºÆ® º¸¿Ï
+#### addAndGet() í…ŒìŠ¤íŠ¸ ë³´ì™„
 ```java
 @Test
 public void addAndGet() throws Exception{
@@ -304,7 +304,7 @@ public void addAndGet() throws Exception{
 }
 ```
 
-#### get() ¿¹¿ÜÁ¶°Ç¿¡ ´ëÇÑ Å×½ºÆ®
+#### get() ì˜ˆì™¸ì¡°ê±´ì— ëŒ€í•œ í…ŒìŠ¤íŠ¸
 ```java
 @Test(expected=EmptyResultDataAccessException.class)
 public void getUserFailure() throws Exception{
@@ -314,12 +314,12 @@ public void getUserFailure() throws Exception{
 	dao.deleteAll();
 	assertThat(dao.getCount(), is(0));
 	
-	dao.get("unknown_id"));//ÀÌ ¸Þ¼Òµå ½ÇÇàÁß¿¡ ¿¹¿Ü°¡ ¹ß»ýÇØ¾ß ÇÑ´Ù.
+	dao.get("unknown_id"));//ì´ ë©”ì†Œë“œ ì‹¤í–‰ì¤‘ì— ì˜ˆì™¸ê°€ ë°œìƒí•´ì•¼ í•œë‹¤.
 }
 ```
-@Test¿¡ expected¸¦ Ãß°¡ÇØ³õÀ¸¸é expected¿¡ ÁöÁ¤ÇÑ ¿¹¿Ü ¹ß»ý ½Ã Å×½ºÆ®°¡ ¼º°øÇÑ´Ù.
+@Testì— expectedë¥¼ ì¶”ê°€í•´ë†“ìœ¼ë©´ expectedì— ì§€ì •í•œ ì˜ˆì™¸ ë°œìƒ ì‹œ í…ŒìŠ¤íŠ¸ê°€ ì„±ê³µí•œë‹¤.
 
-#### Å×½ºÆ®¸¦ ¼º°ø½ÃÅ°±â À§ÇÑ ÄÚµåÀÇ ¼öÁ¤
+#### í…ŒìŠ¤íŠ¸ë¥¼ ì„±ê³µì‹œí‚¤ê¸° ìœ„í•œ ì½”ë“œì˜ ìˆ˜ì •
 ```java
 public User get(String id) throws Exception{
 	...
@@ -344,22 +344,22 @@ public User get(String id) throws Exception{
 }
 ```
 
-#### Æ÷°ýÀûÀÎ Å×½ºÆ®
-Å×½ºÆ®¸¦ ÀÛ¼ºÇÒ ¶§ ºÎÁ¤ÀûÀÎ ÄÉÀÌ½º¸¦ ¸ÕÀú ¸¸µå´Â ½À°üÀ» µéÀÌ´Â°Ô ÁÁ´Ù. get()¸Þ¼ÒµåÀÇ °æ¿ì¶ó¸é Á¸ÀçÇÏÁö ¾Ê´Â id°¡ ÁÖ¾îÁ³À» ¶§´Â ¾î¶»°Ô ¹ÝÀÀÇÒÁö¸¦ ¸ÕÀú °áÁ¤ÇÏ°í, ÀÌ¸¦ È®ÀÎÇÒ ¼ö ÀÖ´Â Å×½ºÆ®¸¦ ¸ÕÀú ¸¸µé·Á°í ÇÑ´Ù¸é ¿¹¿ÜÀû »óÈ²À» ºü¶ß¸®Áö ¾ÊÀ» °ÍÀÌ´Ù.
+#### í¬ê´„ì ì¸ í…ŒìŠ¤íŠ¸
+í…ŒìŠ¤íŠ¸ë¥¼ ìž‘ì„±í•  ë•Œ ë¶€ì •ì ì¸ ì¼€ì´ìŠ¤ë¥¼ ë¨¼ì € ë§Œë“œëŠ” ìŠµê´€ì„ ë“¤ì´ëŠ”ê²Œ ì¢‹ë‹¤. get()ë©”ì†Œë“œì˜ ê²½ìš°ë¼ë©´ ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” idê°€ ì£¼ì–´ì¡Œì„ ë•ŒëŠ” ì–´ë–»ê²Œ ë°˜ì‘í• ì§€ë¥¼ ë¨¼ì € ê²°ì •í•˜ê³ , ì´ë¥¼ í™•ì¸í•  ìˆ˜ ìžˆëŠ” í…ŒìŠ¤íŠ¸ë¥¼ ë¨¼ì € ë§Œë“¤ë ¤ê³  í•œë‹¤ë©´ ì˜ˆì™¸ì  ìƒí™©ì„ ë¹ ëœ¨ë¦¬ì§€ ì•Šì„ ê²ƒì´ë‹¤.
 
-### Å×½ºÆ®°¡ ÀÌ²ô´Â °³¹ß
+### í…ŒìŠ¤íŠ¸ê°€ ì´ë„ëŠ” ê°œë°œ
 
-#### ±â´É¼³°è¸¦ À§ÇÑ Å×½ºÆ®
-getUserFailure() Å×½ºÆ®ÀÇ ±â´ÉÀ» Á¤¸®ÇØº¸¸é ¾Æ·¡¿Í °°´Ù.<br>
+#### ê¸°ëŠ¥ì„¤ê³„ë¥¼ ìœ„í•œ í…ŒìŠ¤íŠ¸
+getUserFailure() í…ŒìŠ¤íŠ¸ì˜ ê¸°ëŠ¥ì„ ì •ë¦¬í•´ë³´ë©´ ì•„ëž˜ì™€ ê°™ë‹¤.<br>
 ![ex_screenshot](./toby2_screenshot/getUserFailure.jpg)
 
 <br>
 
-#### Å×½ºÆ® ÁÖµµ °³¹ß
-¸¸µé°íÀÚ ÇÏ´Â ±â´ÉÀÇ ³»¿ëÀ» ´ã°íÀÖÀ¸¸é¼­ ¸¸µé¾îÁø ÄÚµå¸¦ °ËÁõµµ ÇØÁÙ ¼ö ÀÖµµ·Ï Å×½ºÆ® ÄÚµå¸¦ ¸ÕÀú ¸¸µé°í, Å×½ºÆ®¸¦ ¼º°øÇÏ°Ô ÇØÁÖ´Â ÄÚµå¸¦ ÀÛ¼ºÇÏ´Â ¹æ½ÄÀÇ °³¹ß ¹æ¹ýÀ» Å×½ºÆ® ÁÖµµ °³¹ß(TDD, Test Driven Development)ÀÌ¶ó°í ÇÑ´Ù. <br>
-TDD´Â ¾Æ¿¹ Å×½ºÆ®¸¦ ¸ÕÀú ¸¸µé°í ±× Å×½ºÆ®°¡ ¼º°øÇÏµµ·Ï ÇÏ´Â ÄÚµå¸¸ ¸¸µå´Â ½ÄÀ¸·Î ÁøÇàÇÏ±â ¶§¹®¿¡ Å×½ºÆ®¸¦ »©¸ÔÁö ¾Ê°í ²Ä²ÄÇÏ°Ô ¸¸µé¾î³¾ ¼ö ÀÖ´Ù. ¶ÇÇÑ Å×½ºÆ®¸¦ ÀÛ¼ºÇÏ´Â ½Ã°£°ú ¾ÖÇÃ¸®ÄÉÀÌ¼Ç ÄÚµå¸¦ ÀÛ¼ºÇÏ´Â ½Ã°£ÀÇ °£°ÝÀÌ Âª¾ÆÁø´Ù. <br>
-Áö±Ý±îÁö ÁøÇàÇØ¿Â °³¹ßµµ TDD ¹æ½ÄÀÌ¶ó°í ÇÒ ¼ö ÀÖ´Ù. UserDao¸¦ ¸¸µé°í °¢°¢ÀÇ Å×½ºÆ®¸¦ ¸¸µé¸é¼­ ÄÚµå¸¦ È®ÀåÇØ¿Ô´Ù. ÀÌ ´öºÐ¿¡ Å×½ºÆ® ÄÚµå¸¦ Ãß°¡·Î ÀÛ¼ºÇÒ ÇÊ¿ä ¾øÀÌ ¹Ù·Î¹Ù·Î Å×½ºÆ®ÇØº¼ ¼ö ÀÖ¾ú´Ù.
+#### í…ŒìŠ¤íŠ¸ ì£¼ë„ ê°œë°œ
+ë§Œë“¤ê³ ìž í•˜ëŠ” ê¸°ëŠ¥ì˜ ë‚´ìš©ì„ ë‹´ê³ ìžˆìœ¼ë©´ì„œ ë§Œë“¤ì–´ì§„ ì½”ë“œë¥¼ ê²€ì¦ë„ í•´ì¤„ ìˆ˜ ìžˆë„ë¡ í…ŒìŠ¤íŠ¸ ì½”ë“œë¥¼ ë¨¼ì € ë§Œë“¤ê³ , í…ŒìŠ¤íŠ¸ë¥¼ ì„±ê³µí•˜ê²Œ í•´ì£¼ëŠ” ì½”ë“œë¥¼ ìž‘ì„±í•˜ëŠ” ë°©ì‹ì˜ ê°œë°œ ë°©ë²•ì„ í…ŒìŠ¤íŠ¸ ì£¼ë„ ê°œë°œ(TDD, Test Driven Development)ì´ë¼ê³  í•œë‹¤. <br>
+TDDëŠ” ì•„ì˜ˆ í…ŒìŠ¤íŠ¸ë¥¼ ë¨¼ì € ë§Œë“¤ê³  ê·¸ í…ŒìŠ¤íŠ¸ê°€ ì„±ê³µí•˜ë„ë¡ í•˜ëŠ” ì½”ë“œë§Œ ë§Œë“œëŠ” ì‹ìœ¼ë¡œ ì§„í–‰í•˜ê¸° ë•Œë¬¸ì— í…ŒìŠ¤íŠ¸ë¥¼ ë¹¼ë¨¹ì§€ ì•Šê³  ê¼¼ê¼¼í•˜ê²Œ ë§Œë“¤ì–´ë‚¼ ìˆ˜ ìžˆë‹¤. ë˜í•œ í…ŒìŠ¤íŠ¸ë¥¼ ìž‘ì„±í•˜ëŠ” ì‹œê°„ê³¼ ì• í”Œë¦¬ì¼€ì´ì…˜ ì½”ë“œë¥¼ ìž‘ì„±í•˜ëŠ” ì‹œê°„ì˜ ê°„ê²©ì´ ì§§ì•„ì§„ë‹¤. <br>
+ì§€ê¸ˆê¹Œì§€ ì§„í–‰í•´ì˜¨ ê°œë°œë„ TDD ë°©ì‹ì´ë¼ê³  í•  ìˆ˜ ìžˆë‹¤. UserDaoë¥¼ ë§Œë“¤ê³  ê°ê°ì˜ í…ŒìŠ¤íŠ¸ë¥¼ ë§Œë“¤ë©´ì„œ ì½”ë“œë¥¼ í™•ìž¥í•´ì™”ë‹¤. ì´ ë•ë¶„ì— í…ŒìŠ¤íŠ¸ ì½”ë“œë¥¼ ì¶”ê°€ë¡œ ìž‘ì„±í•  í•„ìš” ì—†ì´ ë°”ë¡œë°”ë¡œ í…ŒìŠ¤íŠ¸í•´ë³¼ ìˆ˜ ìžˆì—ˆë‹¤.
 
 <br>
 
-### Å×½ºÆ® ÄÚµå °³¼±
+### í…ŒìŠ¤íŠ¸ ì½”ë“œ ê°œì„ 
